@@ -56,8 +56,8 @@
                     </a> 
                 </td>
                 <td th:text="|${usuario.Nombre} ${usuario.ApellidoPaterno} ${usuario.ApellidoMaterno}|"> </td>
-                <td th:text="|${usuario.Email} ${usuario.Sexo} ${usuario.Telefono} ${usuario.Celular} |">  </td>
-}                <td>
+                <td th:utext="| ${usuario.Email} ${usuario.Sexo} <br> ${usuario.Telefono}  ${usuario.Celular} <br> ${usuario.Curp} ${usuario.FechaNacimiento} ${usuario.Username} |">  </td>
+                <td>
                     <ul th:if="${usuario.Direcciones != null}">
                         <li th:each="direccion : ${usuario.Direcciones}" th:text="|${direccion.Calle} ${direccion.NumeroInterior}|">Dirección 1</li>
                     </ul>
