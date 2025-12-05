@@ -65,7 +65,9 @@ public class UsuarioDAOIMplementation implements IUsuario {
                         usuario.setSexo(resultSet.getString("Sexo"));
                         usuario.setTelefono(resultSet.getString("Telefono"));
                         usuario.setCelular(resultSet.getString("Celular"));
-
+                        usuario.setCurp(resultSet.getString("Curp"));
+                        usuario.setFechaNacimiento(resultSet.getDate("FechaNacimiento"));
+                        usuario.setUsername(resultSet.getString("Username"));
                         usuario.Rol = new Rol();
                         try {
                             usuario.Rol.setId(resultSet.getInt("IdRol"));
@@ -144,7 +146,7 @@ public class UsuarioDAOIMplementation implements IUsuario {
         }
         return result;
     }
-    
+
     @Override
     public Result GetById(int IdUsuario) {
         Result result = new Result();
