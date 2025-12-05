@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title>Formulario de Usuario</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+
+<div class="container mt-4">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white">
+            <h3 class="mb-0"><i class="bi bi-person-lines-fill"></i> Gestión de Usuario</h3>
+        </div>
+        
+        <div class="card-body">
+            <form th:action="@{/usuario/add}" method="post" th:object="${usuario}">
+                
+                <input type="hidden" th:field="*{IdUsuario}" />
+
+                <h5 class="text-secondary mb-3"><i class="bi bi-person-circle"></i> Datos de Identificación</h5>
+                
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-md-4">
+                        <label class="form-label">Nombre</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-person"></i></span>
+                            <input type="text" class="form-control" placeholder="Nombre" th:field="*{Nombre}">
+                        </div>
+                        <span class="text-danger" th:errors="*{Nombre}"></span>
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <label class="form-label">Apellido Paterno</label>
+                        <input type="text" class="form-control" placeholder="Apellido Paterno" th:field="*{ApellidoPaterno}">
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <label class="form-label">Apellido Materno</label>
+                        <input type="text" class="form-control" placeholder="Apellido Materno" th:field="*{ApellidoMaterno}">
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-md-4">
+                        <label class="form-label">Correo Electrónico</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                            <input type="email" class="form-control" placeholder="ejemplo@correo.com" th:field="*{Email}">
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <label class="form-label">Contraseña</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-key"></i></span>
+                            <input type="password" class="form-control" placeholder="********" th:field="*{Password}">
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <label class="form-label">CURP</label>
+                        <input type="text" class="form-control" placeholder="CURP" th:field="*{Curp}">
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-md-4">
+                        <label class="form-label">Fecha de Nacimiento</label>
+                        <input type="date" class="form-control" th:field="*{FechaNacimiento}">
+                    </div>
+                    
+                    <div class="col-12 col-md-4">
+                        <label class="form-label">Sexo</label>
+                        <select class="form-select" th:field="*{Sexo}">
+                            <option value="">Seleccione</option>
+                            <option value="M">Masculino</option>
+                            <option value="F">Femenino</option>
+                        </select>
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <label class="form-label fw-bold">Rol</label>
+                        <select class="form-select" th:field="*{Rol.Id}">
+                            <option value="0">Seleccione un Rol</option>
+                            <option th:each="r : ${Roles}" th:value="${r.Id}" th:text="${r.Rol}"></option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="row g-3 mb-4">
+                     <div class="col-12 col-md-4">
+                        <label class="form-label">Teléfono</label>
+                        <input type="text" class="form-control" th:field="*{Telefono}">
+                    </div>
+                     <div class="col-12 col-md-4">
+                        <label class="form-label">Celular</label>
+                        <input type="text" class="form-control" th:field="*{Celular}">
+                    </div>
+                </div>
+
+                <hr class="my-4">
+
+                <h5 class="text-secondary mb-3"><i class="bi bi-geo-alt-fill"></i> Domicilio</h5>
+                
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-md-6">
+                        <label class="form-label">Calle</label>
+                        <input type="text" class="form-control" th:field="*{Direcciones[0].Calle}">
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <label class="form-label">Número Exterior</label>
+                        <input type="text" class="form-control" th:field="*{Direcciones[0].NumeroExterior}">
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <label class="form-label">Número Interior</label>
+                        <input type="text" class="form-control" th:field="*{Direcciones[0].NumeroInterior}">
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-5">
+                    <div class="col-12 col-md-3">
+                        <label class="form-label">País</label>
+                        <select class="form-select" id="ddlPais"> 
+                            <option value="0">Seleccione un País</option>
+                            <option th:each="p : ${Pais}" th:value="${p.IdPais}" th:text="${p.Nombre}"></option>
+                        </select>
+                    </div>
+
+                    <div class="col-12 col-md-3">
+                        <label class="form-label">Estado</label>
+                        <select class="form-select" id="ddlEstado">
+                            <option value="0">Seleccione un País primero</option>
+                        </select>
+                    </div>
+
+                    <div class="col-12 col-md-3">
+                        <label class="form-label">Municipio</label>
+                        <select class="form-select" id="ddlMunicipio">
+                            <option value="0">Seleccione un Estado primero</option>
+                        </select>
+                    </div>
+
+                    <div class="col-12 col-md-3">
+                        <label class="form-label fw-bold">Colonia</label>
+                        <select class="form-select" id="ddlColonia" th:field="*{Direcciones[0].Colonia.IdColonia}">
+                            <option value="0">Seleccione un Municipio</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4 mb-5">
+                    <button type="submit" class="btn btn-success me-md-2">
+                        <i class="bi bi-save"></i> Guardar
+                    </button>
+                    <a th:href="@{/usuario/Inicio}" class="btn btn-danger">
+                        <i class="bi bi-x-circle"></i> Cancelar
+                    </a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function validarCampo(input, regex) {
+        if (regex.test(input.val())) {
+            input.removeClass('is-invalid').addClass('is-valid');
+            return true;
+        } else {
+            input.removeClass('is-valid').addClass('is-invalid');
+            return false;
+        }
+    }
+
+    $(document).ready(function() {
+
+        var regexLetras = /^[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+$/;
+        $('input[name="Nombre"], input[name="ApellidoPaterno"], input[name="ApellidoMaterno"]').on('input', function() {
+            validarCampo($(this), regexLetras);
+        });
+
+        var regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        $('input[name="Email"]').on('input', function() {
+            validarCampo($(this), regexEmail);
+        });
+
+        var regexNumeros = /^\d{10}$/;
+        $('input[name="Telefono"], input[name="Celular"]').on('input', function() {
+            validarCampo($(this), regexNumeros);
+        });
+
+        var regexCurp = /^[A-Z0-9]{18}$/;
+        $('input[name="Curp"]').on('input', function() {
+            $(this).val($(this).val().toUpperCase());
+            validarCampo($(this), regexCurp);
+        });
+
+        $('form').on('submit', function(e) {
+            var isValid = true;
+            if (!validarCampo($('input[name="Nombre"]'), regexLetras)) isValid = false;
+            if (!validarCampo($('input[name="ApellidoPaterno"]'), regexLetras)) isValid = false;
+            if (!validarCampo($('input[name="Email"]'), regexEmail)) isValid = false;
+            
+            if (!isValid) {
+                e.preventDefault();
+                alert("Por favor corrige los campos en rojo.");
+            }
+        });
+
+        $("#ddlPais").change(function() {
+            var idPais = $(this).val();
+            $("#ddlEstado").empty().append('<option value="0">Seleccione un Estado</option>');
+            $("#ddlMunicipio").empty().append('<option value="0">Esperando Estado...</option>');
+            $("#ddlColonia").empty().append('<option value="0">Esperando Municipio...</option>');
+
+            if (idPais > 0) {
+                $.ajax({
+                    url: "/usuario/getEstadosByPais/" + idPais,
+                    type: "GET",
+                    dataType: "json",
+                    success: function(result) {
+                        var lista = result.Objects || result.objects;
+                        $.each(lista, function(i, item) {
+                            var id = item.IdEstado || item.idEstado;
+                            var nombre = item.Nombre || item.nombre;
+                            $("#ddlEstado").append('<option value="' + id + '">' + nombre + '</option>');
+                        });
+                    }
+                });
+            }
+        });
+
+        $("#ddlEstado").change(function() {
+            var idEstado = $(this).val();
+            $("#ddlMunicipio").empty().append('<option value="0">Seleccione un Municipio</option>');
+            $("#ddlColonia").empty().append('<option value="0">Esperando Municipio...</option>');
+
+            if (idEstado > 0) {
+                $.ajax({
+                    url: "/usuario/MunicipioByEstado/" + idEstado,
+                    type: "GET",
+                    dataType: "json",
+                    success: function(result) {
+                        var lista = result.Objects || result.objects;
+                        $.each(lista, function(i, item) {
+                            var id = item.IdMunicipio || item.idMunicipio;
+                            var nombre = item.Nombre || item.nombre;
+                            $("#ddlMunicipio").append('<option value="' + id + '">' + nombre + '</option>');
+                        });
+                    }
+                });
+            }
+        });
+
+        $("#ddlMunicipio").change(function() {
+            var idMunicipio = $(this).val();
+            $("#ddlColonia").empty().append('<option value="0">Seleccione una Colonia</option>');
+
+            if (idMunicipio > 0) {
+                $.ajax({
+                    url: "/usuario/ColoniaByMunicipio/" + idMunicipio,
+                    type: "GET",
+                    dataType: "json",
+                    success: function(result) {
+                        var lista = result.Objects || result.objects;
+                        if(lista != null){
+                             $.each(lista, function(i, item) {
+                                var id = item.IdColonia || item.idColonia;
+                                var nombre = item.Nombre || item.nombre;
+                                $("#ddlColonia").append('<option value="' + id + '">' + nombre + '</option>');
+                            });
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>
+</body>
+</html>

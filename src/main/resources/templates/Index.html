@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Gestión de Usuarios</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    </head>
+    <body class="container">
+        <div>
+            <br/>
+            <br/>
+            <a th:href="@{/usuario/form}" class="btn btn-success" onclick="alertaNuevo(event, this.href)">Nuevo Usuario</a>
+            <a th:href="@{/usuario/}" class="btn btn-dark" onclick="alertaNuevo(event, this.href)">Carga Masiva</a>
+
+            <div class="p-3 mb-2 bg-dark text-white">Buscar Usuario</div>
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Nombre" aria-label="Nombre"/>
+                <input class="form-control me-2" type="search" placeholder="Apellido Paterno" aria-label="Apellido Paterno"/>
+                <input class="form-control me-2" type="search" placeholder="Apellido Materno" aria-label="Apellido Materno"/>
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Rol
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Usuario</a></li>
+                    <li><a class="dropdown-item" href="#">administrador</a></li>
+                </ul>
+                <button class="btn btn-outline-success" type="submit">Search</button>
+
+            </form>
+
+        </div>
+
+        <table class="table table-hover table-striped">
+            <tr class="table-dark">
+                <th class="col=1">Accion</th>
+                <th class="col=3">Usuario</th>
+                <th class="col=">Informacion</th>
+                <th class="col=">Direcciones</th>
+
+            </tr>
+
+            <tr th:each="usuario : ${Usuarios}">
+                <td>
+                    <a th:href="@{/usuario/form(idUsuario=${usuario.IdUsuario})}" 
+                       class="btn btn-warning" onclick="alertaEditar(event, this.href)">
+                        <i class="bi bi-pencil-square"></i>
+                    </a>
+
+                    <a th:href="@{/usuario/delete/{IdUsuario}(IdUsuario=${usuario.IdUsuario})}" 
+                       class="btn btn-danger" onclick="alertaEliminar(event, this.href)">
+                        <i class="bi bi-trash3-fill"></i>
+                    </a> 
+                </td>
+                <td th:text="|${usuario.Nombre} ${usuario.ApellidoPaterno} ${usuario.ApellidoMaterno}|"> </td>
+                <td th:text="|${usuario.Email} ${usuario.Sexo} ${usuario.Telefono} ${usuario.Celular} |">  </td>
+}                <td>
+                    <ul th:if="${usuario.Direcciones != null}">
+                        <li th:each="direccion : ${usuario.Direcciones}" th:text="|${direccion.Calle} ${direccion.NumeroInterior}|">Dirección 1</li>
+                    </ul>
+                    <ul th:unless="${usuario.Direcciones != null}">
+                        <li>Sin dirección.</li>
+                    </ul>
+                </td>
+
+
+            </tr>
+        </table>
+    </div>
+
+
+
+    <script>
+        function alertaNuevo(event, url) {
+            event.preventDefault();
+            Swal.fire({
+                title: 'Cargando formulario',
+                text: 'Por favor espere...',
+                icon: 'info',
+                timer: 1000,
+                showConfirmButton: false,
+                didOpen: () => {
+                    Swal.showLoading()
+                }
+            }).then(() => {
+                window.location.href = url;
+            });
+        }
+
+        function alertaEditar(event, url) {
+            event.preventDefault();
+            Swal.fire({
+                title: 'Recuperando datos',
+                text: 'Espere mientras cargamos la información del usuario.',
+                icon: 'question',
+                timer: 1000,
+                showConfirmButton: false,
+                backdrop: `rgba(0,0,123,0.4)`
+            }).then(() => {
+                window.location.href = url;
+            });
+        }
+
+        function alertaEliminar(event, url) {
+            event.preventDefault();
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "¡No podrás revertir esta acción!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: '¡Eliminado!',
+                        text: 'El usuario ha sido eliminado.',
+                        icon: 'success',
+                        timer: 1500,
+                        showConfirmButton: false
+                    }).then(() => {
+                        window.location.href = url;
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+</html>
