@@ -302,4 +302,75 @@ public class UsuarioDAOIMplementation implements IUsuario {
         }
         return result;
     }
+
+ @Override
+    public Result BuscarUsuario(String nombre, String apellidoPaterno, String apellidoMaterno, String rol) {
+ 
+        Result resultsearch = new Result();
+ 
+        try {
+            resultsearch.Correct = jdbcTemplate.execute(
+                    "{CALL BusquedaAlumnoDireccionGetAll(?,?,?,?,?)}",
+                    (CallableStatementCallback<Boolean>) callableStatement -> {
+ 
+                        // Entradas
+                        callableStatement.setString(1, nombre);
+                        callableStatement.setString(2, apellidoPaterno);
+                        callableStatement.setString(3, apellidoMaterno);
+                        callableStatement.setString(4, rol);
+ 
+                        // Salida (cursor)
+                        callableStatement.registerOutParameter(5, java.sql.Types.REF_CURSOR);
+ 
+                        callableStatement.execute();
+ 
+                        ResultSet resultSet = (ResultSet) callableStatement.getObject(5);
+ 
+                        resultsearch.Objects = new ArrayList<>();
+ 
+                        while (resultSet.next()) {
+ 
+                            Usuario usuario = new Usuario();
+                            usuario.setNombre(resultSet.getString("NombreUsuario"));
+                            usuario.setApellidoPaterno(resultSet.getString("ApellidoPaterno"));
+                            usuario.setApellidoMaterno(resultSet.getString("ApellidoMaterno"));
+                            usuario.setEmail(resultSet.getString("Email"));
+                            usuario.setTelefono(resultSet.getString("Telefono"));
+                            usuario.setCurp(resultSet.getString("Curp"));
+                            usuario.setUsername(resultSet.getString("Username"));
+                            usuario.setFechaNacimiento(resultSet.getDate("FechaNacimiento"));
+                            usuario.setSexo(resultSet.getString("Sexo"));
+                            usuario.setCelular(resultSet.getString("Celular"));
+ 
+                            // direcciones
+                            int IdDireccion = resultSet.getInt("IdDireccion");
+                            if (IdDireccion != 0) {
+                                usuario.Direcciones = new ArrayList<>();
+                                Direccion direccion = new Direccion();
+                                direccion.setCalle(resultSet.getString("Calle"));
+                                direccion.setNumeroInterior(resultSet.getString("NumeroInterior"));
+                                direccion.setNumeroExterior(resultSet.getString("NumeroExterior"));
+ 
+                                Colonia colonia = new Colonia();
+                                colonia.setIdColonia(resultSet.getInt("IdColonia"));
+                                colonia.setNombre(resultSet.getString("NombreColonia"));
+                                colonia.setCodigoPostal(resultSet.getString("CodigoPostal"));
+                                direccion.Colonia = colonia;
+ 
+                                usuario.Direcciones.add(direccion);
+                            }
+ 
+                            resultsearch.Objects.add(usuario);
+                        }
+                        return true;
+                    });
+ 
+        } catch (Exception ex) {
+            resultsearch.Correct = false;
+            resultsearch.ErrorMessage = ex.getLocalizedMessage();
+            resultsearch.ex = ex;
+        }
+ 
+        return resultsearch;
+    }
 }

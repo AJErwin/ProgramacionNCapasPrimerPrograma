@@ -20,5 +20,7 @@ public interface IUsuario {
     
    // public Result eliminarusuario(int idUsuario);
     
+    public Result BuscarUsuario (String nombre, String apellidoPaterno, String apellidoMaterno, String rol);
+    
 
 }
